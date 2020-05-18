@@ -2,7 +2,8 @@
 Fyrstly I ran hash-tably with: `time ./hash_table`
 and it showed 2500sec, thats bad... and I rewrote some functions and add function that do pointers to words.
 
-```char** Create_words(char *text, int* wNumber){
+```
+char** Create_words(char *text, int* wNumber){
     assert(text != nullptr);
 
     char** index = (char**) calloc(500000, sizeof(index[0]));
@@ -32,7 +33,8 @@ and it showed 2500sec, thats bad... and I rewrote some functions and add functio
 ```
 
 Than made a cicle and...
-```for (int i = 0; i < 400; i++)
+```
+for (int i = 0; i < 400; i++)
         FillHashTable(Index, wNumber, &HashTable, HashSolve_Rol);
 ```
 ... ran again with `time`.
@@ -41,6 +43,7 @@ It showed 36.7 sec.
 
 Ran callgrind(`valgrind --tool=callgrind ./hash`)
 and:
+
 ![alt-текст](https://github.com/AlekseiByk/assembler/blob/master/hash_optimization/before.png "Kcachegrind befor asm optimization")
 
 I saw that i need to rewrite `hash_solve` and `hash_search`.
@@ -51,7 +54,8 @@ Very scary? but not difficult.
 
 Firstly `hash_solve_ROL`:
 
-```_Z13HashSolve_RolPc:
+```
+_Z13HashSolve_RolPc:
 .LFB24:
 	.cfi_startproc
 	endbr64
@@ -97,7 +101,8 @@ Firstly `hash_solve_ROL`:
 	
    After some lines of code It turned into this:
    
-   ```_Z13HashSolve_RolPc:
+   ```
+   _Z13HashSolve_RolPc:
 .LFB24:
 	.cfi_startproc
 	endbr64
@@ -125,7 +130,8 @@ Firstly `hash_solve_ROL`:
    
    And `Hash_Search`:
    
-   ```_Z10hashSearchP12hash_table_tPcj:
+   ```
+   _Z10hashSearchP12hash_table_tPcj:
 .LFB19:
 	.cfi_startproc
 	endbr64
@@ -185,7 +191,8 @@ Firstly `hash_solve_ROL`:
     
    turned into:
    
-   ```_Z10hashSearchP12hash_table_tPcj:
+   ```
+   _Z10hashSearchP12hash_table_tPcj:
 .LFB19:
 	.cfi_startproc
 	endbr64
