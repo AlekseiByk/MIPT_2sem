@@ -99,9 +99,9 @@ _Z13HashSolve_RolPc:
 	.cfi_endproc
 ```
 	
-   After some lines of code It turned into this:
+After some lines of code It turned into this:
    
-   ```
+```
    _Z13HashSolve_RolPc:
 .LFB24:
 	.cfi_startproc
@@ -128,9 +128,9 @@ _Z13HashSolve_RolPc:
 	.cfi_endproc
 ```
    
-   And `Hash_Search`:
+And `Hash_Search`:
    
-   ```
+```
    _Z10hashSearchP12hash_table_tPcj:
 .LFB19:
 	.cfi_startproc
@@ -189,9 +189,9 @@ _Z13HashSolve_RolPc:
 	.cfi_endproc
 ```
     
-   turned into:
+turned into:
    
-   ```
+```
    _Z10hashSearchP12hash_table_tPcj:
 .LFB19:
 	.cfi_startproc
