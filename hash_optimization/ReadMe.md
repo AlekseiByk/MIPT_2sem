@@ -41,7 +41,7 @@ It showed 36.7 sec.
 
 Ran callgrind(`valgrind --tool=callgrind ./hash`)
 and:
-![alt-текст]( "Kcachegrind befor asm optimization")
+![alt-текст](https://github.com/AlekseiByk/assembler/blob/master/hash_optimization/before.png "Kcachegrind befor asm optimization")
 
 I saw that i need to rewrite `hash_solve` and `hash_search`.
 
@@ -266,7 +266,7 @@ time: 24sec
 
 and Kcachegrind:
 
-![alt-текст]( "Kcachegrind after asm optimization")
+![alt-текст](https://github.com/AlekseiByk/assembler/blob/master/hash_optimization/after.png "Kcachegrind after asm optimization")
 
 as we can see `hash_solve` became 3 times faster and `hash_search` became 1.7 times faster
 
