@@ -42,13 +42,14 @@ FONT			equ 4eh
 ;-------------------------------------------------------
 Start:
 ;=======================================================
-;interupt		
+;interupt	
+
 		xor ax, ax
 		mov es, ax
 		
 		
 		
-		mov bx, 8 * 4			; адрес прерывания 8*4 -таймер
+		mov bx, 9 * 4			; адрес прерывания 8*4 -таймер
 		
 		mov ax,   es:[bx]
 		mov Old09, ax
@@ -65,11 +66,40 @@ Start:
 		shr dx, 4
 		inc dx
 		int 21h
-
+;==================================================================================================================================
+;==================================================================================================================================
+;==================================================================================================================================
 New09	proc
-		push di es si bp dx ax
-		mov word ptr ds:[offset register], di 
-		mov word ptr ds:[offset register + 2], es ;сохранили в памяти
+		push ax
+		in al, 60h
+
+
+		cmp al, 80h
+		ja endreg
+		cmp byte ptr ds:[register + 4], 01h
+		je repiet
+		
+		pop ax
+		
+		push di es si bp dx cx ax
+		
+		mov byte ptr ds:[mem], 01h
+		mov byte ptr ds:[register + 4], 01h
+		xor bp, bp
+		
+		mov dx, 0b81ch	
+cl1:	mov es, dx		;верхний левый угол рамки
+		mov di, 14	
+		mov cx, 9
+tomem:	mov ax, word ptr es:[di]
+		mov word ptr ss:[bp + 100], ax
+		add bp, 2
+		add di, 2
+		loop tomem
+		add dx, 10d
+		cmp dx, 0b81ch + 10d*15d
+		jb cl1
+		
 		
 		mov di, 0b800h			;видеопамять
 		mov es, di
@@ -79,10 +109,62 @@ New09	proc
 		mov ah, FONT
 		call DrawFr				;нарисовать рамку
 		
-		pop ax dx bp si
+		pop ax cx dx bp si es di
+		call DrawAllReg
+		jmp	jump
 		
-		mov di, 80*4*2 - 4		;левый верхний угол регистров
+repiet:
+		pop ax
+		call DrawAllReg
+		jmp	jump
+		
+endreg:
+		pop ax
+		cmp byte ptr ds:[mem], 01h
+		jne jump
+		
+		cmp byte ptr ds:[mem], 00h
+		mov byte ptr ds:[register + 4], 00h
+		push es di bp dx cx ax
+		xor bp, bp
+		mov dx, 0b81ch			;видеопамять	
+cl2:	mov es, dx
+		mov di, 14		;верхний левый угол рамки
+		mov cx, 9
+frommem:	mov ax, word ptr ss:[bp + 100]
+		mov word ptr es:[di], ax
+		add bp, 2
+		add di, 2
+		loop frommem
+		add dx, 10d
+		cmp dx, 0b81ch + 10d*15d
+		jb cl2
 
+		
+		pop ax cx dx bp di es
+		
+		
+jump:
+		db 0eah
+Old09	dw 0
+		dw 0
+	;	iret
+		endp
+;==================================================================================================================================
+;==================================================================================================================================
+;==================================================================================================================================
+;		.getch
+;		.exitDOS
+
+;----------------------------------------------------------------------------------
+DrawAllReg proc
+		push di es
+		
+		mov word ptr ds:[offset register], di 
+		mov word ptr ds:[offset register + 2], es ;сохранили в памяти
+		mov di, 0b800h			;видеопамять
+		mov es, di
+		mov di, 80*4*2 - 4		;левый верхний угол регистров
 		std
 		.Dreg ax
 		.writer 'a', 'x'
@@ -124,17 +206,8 @@ New09	proc
 		cld
 		
 		pop es di
-		
-		db 0eah
-Old09	dw 0
-		dw 0
-	;	iret
 		endp
-		
-;=======================================================
-;		.getch
-;		.exitDOS
-
+;--------------------------------------------------------------------------------
 ;-------------------------------------------------------
 ; printf register 
 ; bx - register to print
@@ -253,6 +326,7 @@ DrawLine		proc
 		
 ;-------------------------------------------------------
 
-register:	db '                    '
+register:	db '    ',0,0,'                '
+mem:	db 1000 dup (00h)
 theEnd:
 end		Start
