@@ -6,15 +6,12 @@
 ;	es : di - destination
 ; Destr: cx di
 ;_______________________________________________________
-memset		proc
-		pushf
+memset		macro
 		cld
-		
 		rep stosw
-		popf
 		ret
 		
-		endp
+		endm
 ;_______________________________________________________
 
 
@@ -23,16 +20,13 @@ memset		proc
 ;Entry:	ds:si - source
 ;	es:di - destination
 ;	cx - count
-;Destr: cx di
+;Destr: cx di si
 ;_______________________________________________________
-memcpy		proc
-		pushf
+memcpy		macro
 		cld
-		
 		rep movsb
-		popf
 		ret
-		endp
+		endm
 ;-------------------------------------------------------
 
 ;-------------------------------------------------------MEMCHR
@@ -43,17 +37,15 @@ memcpy		proc
 ; ah - byte for search
 ;Return: 
 ; es:di - addres of the first matched byte if it is and di = 0FFFFh if there is no al bytes
-;Destr:
+;Destr: cx
 ;_______________________________________________________
 memchr		proc
-		pushf
 		cld
 		
 		repne scasb
 		je @@match
 		mov di, 0000h
 @@match:	dec di
-		popf
 		ret
 		endp
 ;-------------------------------------------------------
@@ -72,18 +64,19 @@ memchr		proc
 ;Destr: di si cx 
 ;_______________________________________________________
 memcmp		proc
-		pushf 
 		cld
 		repe cmpsb
-		je equal
-		jb above
-		mov ax, -1
+		mov al, byte ptr es:[di - 1]
+		sub al, byte ptr es:[si - 1]
 		ret
-equal:	mov ax, 0
-		ret
-above:	mov ax, 1
-		popf
-		ret
+;		je equal
+;		jb above
+;		mov ax, -1
+;		ret
+;equal:	mov ax, 0
+;		ret
+;above:	mov ax, 1
+;		ret
 		endp
 ;-------------------------------------------------------
 
@@ -97,7 +90,6 @@ above:	mov ax, 1
 ;Destr: di
 ;_______________________________________________________
 strlen		proc
-		pushf
 		cld
 		
 		xor ax, ax
@@ -109,7 +101,6 @@ src:		inc di
 		jne src
 
 		dec ax
-		popf
 		ret
 		endp
 ;-------------------------------------------------------
@@ -124,7 +115,6 @@ src:		inc di
 ; es:di - first addres of symbol or di = 0ffffh if char not found in the string
 ;_______________________________________________________
 strchr		proc
-		pushf
 		cld
 		
 src:	cmp byte ptr es:[di], 00h
@@ -135,8 +125,7 @@ src:	cmp byte ptr es:[di], 00h
 		dec di
 		ret
 		
-no:		mov di, 0000h
-		popf
+no:		mov di, 0ffffh
 		ret
 		endp
 ;-------------------------------------------------------
@@ -148,11 +137,10 @@ no:		mov di, 0000h
 ; es:di - string, end must be 00
 ; al - searching char
 ;Return: 
-; es:di - first addres of symbol or di = 0ffffh if char not found in the string
+; es:di - first addres of symbol or di ...= 0ffffh if char not found in the string
+; destr: ah si cx
 ;_______________________________________________________
-strchr		proc
-		push ax cx si
-		pushf
+strrchr		proc
 		cld
 		xor ah, ah
 		
@@ -172,10 +160,9 @@ endl:
 		repne scasb
 		je yes		
 
-no:		mov di, 0fffeh
+no:		mov di, 0ffffh
+		ret
 yes:		inc di
-		popf
-		pop si cx ax
 		ret
 		endp
 ;-------------------------------------------------------
@@ -210,11 +197,9 @@ exit:	popf
 ; es:di - what to search
 ;Return: 
 ; es:si - first addres of symbol or di = 0ffffh if char not found in the string
-; Destr: 
+; Destr: di si ax
 ;_______________________________________________________
 strstr		proc
-		push ax
-		pushf
 		cld
 		mov ax, di
 
@@ -229,12 +214,10 @@ comp:		cmp byte ptr es:[di], 00h
 		jmp comp
 		
 notf:	mov si, 0ffffh
-		pop ax
 		ret
+		
 exit:		sub si, di
 		add si, ax
-		popf
-		pop ax
 		ret
 		endp
 ;-------------------------------------------------------

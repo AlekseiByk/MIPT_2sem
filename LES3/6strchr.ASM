@@ -23,7 +23,6 @@ Start:
 ; es:di - first addres of symbol or di = 0ffffh if char not found in the string
 ;_______________________________________________________
 strchr		proc
-		pushf
 		cld
 		
 src:	cmp byte ptr es:[di], 00h
@@ -34,8 +33,7 @@ src:	cmp byte ptr es:[di], 00h
 		dec di
 		ret
 		
-no:		mov di, 0000h
-		popf
+no:		mov di, 0ffffh
 		ret
 		endp
 ;-------------------------------------------------------

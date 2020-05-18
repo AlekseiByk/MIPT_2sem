@@ -30,20 +30,22 @@ Start:
 ;Destr: di si cx 
 ;_______________________________________________________
 memcmp		proc
-		pushf 
 		cld
 		repe cmpsb
-		je equal
-		jb above
-		mov ax, -1
-		ret
-equal:	mov ax, 0
-		ret
-above:	mov ax, 1
-		popf
-		ret
+		xor ax, ax
+		mov al, byte ptr es:[di - 1]
+		sub al, byte ptr es:[si - 1]
+		ret	
+;		je equal
+;		jb above
+;		mov ax, -1
+;		ret
+;equal:	mov ax, 0
+;		ret
+;above:	mov ax, 1
+;		ret
 		endp
 ;-------------------------------------------------------
 source:		db 'source for this programs'
-dest:		db 'source not for this'	
+dest:		db 'source for this programs'	
 end		Start
