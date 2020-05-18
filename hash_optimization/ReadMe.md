@@ -36,14 +36,21 @@ Than made a cicle and...
         FillHashTable(Index, wNumber, &HashTable, HashSolve_Rol);
 ```
 ... ran again with `time`.
+
 It showed 36.7 sec.
+
 Ran callgrind(`valgrind --tool=callgrind ./hash`)
 and:
 ![alt-текст]( "Kcachegrind befor asm optimization")
+
 I saw that i need to rewrite `hash_solve` and `hash_search`.
+
 Compiled with key `-S`(`gcc -S Hash_table.c Hash.s`) to get assembler code of the program.
+
 Very scary? but not difficult.
+
 Firstly `hash_solve_ROL`:
+
 ```	.globl	_Z13HashSolve_RolPc
 	.type	_Z13HashSolve_RolPc, @function
 _Z13HashSolve_RolPc:
@@ -89,9 +96,11 @@ _Z13HashSolve_RolPc:
 	ret
 	.cfi_endproc
 .LFE24:
-	.size	_Z13HashSolve_RolPc, .-_Z13HashSolve_RolPc```
-   
+	.size	_Z13HashSolve_RolPc, .-_Z13HashSolve_RolPc
+```
+	
    After some lines of code It turned into this:
+   
    ```.globl	_Z13HashSolve_RolPc
 	.type	_Z13HashSolve_RolPc, @function
 _Z13HashSolve_RolPc:
@@ -120,9 +129,11 @@ _Z13HashSolve_RolPc:
 	ret
 	.cfi_endproc
 .LFE24:
-	.size	_Z13HashSolve_RolPc, .-_Z13HashSolve_RolPc```
+	.size	_Z13HashSolve_RolPc, .-_Z13HashSolve_RolPc
+```
    
    And `Hash_Search`:
+   
    ```.globl	_Z10hashSearchP12hash_table_tPcj
 	.type	_Z10hashSearchP12hash_table_tPcj, @function
 _Z10hashSearchP12hash_table_tPcj:
@@ -182,9 +193,11 @@ _Z10hashSearchP12hash_table_tPcj:
 	ret
 	.cfi_endproc
 .LFE19:
-	.size	_Z10hashSearchP12hash_table_tPcj, .-_Z10hashSearchP12hash_table_tPc```
+	.size	_Z10hashSearchP12hash_table_tPcj, .-_Z10hashSearchP12hash_table_tPc
+```
     
    turned into:
+   
    ```.globl	_Z10hashSearchP12hash_table_tPcj
 	.type	_Z10hashSearchP12hash_table_tPcj, @function
 _Z10hashSearchP12hash_table_tPcj:
@@ -244,15 +257,21 @@ _Z10hashSearchP12hash_table_tPcj:
 	ret
 	.cfi_endproc
 .LFE19:
-	.size	_Z10hashSearchP12hash_table_tPcj, .-_Z10hashSearchP12hash_table_tPcj```
+	.size	_Z10hashSearchP12hash_table_tPcj, .-_Z10hashSearchP12hash_table_tPcj
+```
     
 Ok, ran with `time` and `callgrind` and the results are as follows:
+
 time: 24sec
+
 and Kcachegrind:
+
 ![alt-текст]( "Kcachegrind after asm optimization")
+
 as we can see `hash_solve` became 3 times faster and `hash_search` became 1.7 times faster
 
 and 
+
 ## 40% optimization for all program
     
 
