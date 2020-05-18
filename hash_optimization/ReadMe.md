@@ -251,5 +251,6 @@ as we can see `hash_solve` became 3 times faster and `hash_search` became 1.7 ti
 and 
 
 ## 40% optimization for all program
+and minus 30 lines of assemble code
     
 
