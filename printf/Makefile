@@ -1,5 +1,5 @@
-SOURCES = printf.asm
-OBJECTS = $(SOURCES:.asm=.o)
+SOURCES = printf_jumptable.s
+OBJECTS = $(SOURCES:.s=.o)
 
 all: $(SOURCES) obj exe del run
 
