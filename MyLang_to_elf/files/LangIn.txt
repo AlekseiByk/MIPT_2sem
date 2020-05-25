@@ -1,0 +1,12 @@
+fib(x)
+	if ( x <= 1)
+		ret x
+	ret fib(x - 1) + fib ( x - 2)
+
+main()
+	get(x)
+	z = 0
+	while ( z < 1000 )
+		y = fib(x)
+		z = z + 10
+	put ( y )
