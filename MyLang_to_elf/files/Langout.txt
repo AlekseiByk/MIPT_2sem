@@ -1,5 +1,5 @@
-GetD( a, b, c )
-	dd раўно (b * b - 4 * a * c)
+GetD( c, b, a )
+	dd раўно (b * b - 4 * c * a)
 	вярни dd
 
 

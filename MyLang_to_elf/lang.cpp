@@ -1,4 +1,22 @@
 #include "headers/Header.h"
+#include "headers/Text.h"
+
+unit_t arr[MAXCODELEN] = {};
+int VarNumberArray[50] = {};
+Namenumnum_t variables[VARNUMBER] = {};
+int number_of_var = 0;
+const char * s = "";
+const char * starts = "";
+
+addres_label labels[100];
+int number_of_labels = 0;
+int FunctionNumber = 0;
+int print_pointer = 0;                         //pointer to print function
+int scan_pointer  = 0;                         //pointer to scan function
+int size = 0;                                  //size of executable code
+int entery_point = 0;                          //entery point of executable code
+int entery_point_0 = 0;
+int Number_Of_Labels_hex = 0;
 
 int main() 
 {
@@ -6,7 +24,7 @@ int main()
     int inputPhrase = 0;
     tree_node_t* head = nullptr;
     
-    while (inputPhrase < 8)
+    while (inputPhrase < 7)
     {
         printf("\n\
 			\n0.Из LangIn.txt в дерево\
@@ -15,9 +33,8 @@ int main()
 			\n3.в асемблер\
 			\n4.графический дамп\
 			\n5.optimize\
-			\n6.to Asm x86_64\
-			\n7.to Elf\
-			\n8+.exit\n\n");
+			\n6.to Elf\
+			\n7+.exit\n\n");
 
         scanf("%d", &inputPhrase);
         switch(inputPhrase)
@@ -88,18 +105,15 @@ int main()
             	to_bin(head);
             	break;
             }
-            case 7:
+            /*case 7:
             {
             	//ToElf("ASM_x86_64/output.elf", head);
             	break;
-            }
+            }*/
         }
     }
 
     treeDestruct(head);
     return 0;
 }
-
-#include "headers/Language.cpp"
-#include "headers/Print.cpp"
-#include "headers/ASM.cpp"
+           

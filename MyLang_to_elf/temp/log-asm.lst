@@ -1,0 +1,74 @@
+GNU assembler 1.00
+source: temp/input.asmc
+0004  32    98 00 00 00  jmp main:
+0009  0B 6E 00 00 80 3F  push [ dx + 1 ]
+0015  0B 20 00 00 80 3F  push 1
+0021  34    23 00 00 00  ja label0:
+0026  0B 6E 00 00 80 3F  push [ dx + 1 ]
+0032  0C 60 00 00 00 00  pop [ 0 ]
+0038  3A                 ret
+0039  0B 6E 00 00 80 3F  push [ dx + 1 ]
+0045  0B 20 00 00 80 3F  push 1
+0051  15                 sub
+0052  0C 6E 00 00 00 40  pop [ dx + 2 ]
+0058  0B 0E              push dx
+0060  0B 20 00 00 80 3F  push 1
+0066  14                 add
+0067  0C 0E              pop dx
+0069  39    05 00 00 00  call func25:
+0074  0B 60 00 00 00 00  push [ 0 ]
+0080  0B 0E              push dx
+0082  0B 20 00 00 80 3F  push 1
+0088  15                 sub
+0089  0C 0E              pop dx
+0091  0B 6E 00 00 80 3F  push [ dx + 1 ]
+0097  0B 20 00 00 00 40  push 2
+0103  15                 sub
+0104  0C 6E 00 00 00 40  pop [ dx + 2 ]
+0110  0B 0E              push dx
+0112  0B 20 00 00 80 3F  push 1
+0118  14                 add
+0119  0C 0E              pop dx
+0121  39    05 00 00 00  call func25:
+0126  0B 60 00 00 00 00  push [ 0 ]
+0132  0B 0E              push dx
+0134  0B 20 00 00 80 3F  push 1
+0140  15                 sub
+0141  0C 0E              pop dx
+0143  14                 add
+0144  0C 60 00 00 00 00  pop [ 0 ]
+0150  3A                 ret
+0151  32    1E 01 00 00  jmp endlabel:
+0156  0B 0E              push dx
+0158  0B 20 00 00 E0 40  push 7
+0164  14                 add
+0165  0C 0E              pop dx
+0167  0F                 in
+0168  0C 6E 00 00 80 3F  pop[ dx + 1 ]
+0174  0B 20 00 00 00 00  push 0
+0180  0C 6E 00 00 00 40  pop [ dx +  2 ]
+0186  0B 6E 00 00 00 40  push [ dx + 2 ]
+0192  0B 20 00 00 7A 44  push 1000
+0198  35    12 01 00 00  jae label3:
+0203  0B 6E 00 00 80 3F  push [ dx + 1 ]
+0209  0C 6E 00 00 80 40  pop [ dx + 4 ]
+0215  0B 0E              push dx
+0217  0B 20 00 00 40 40  push 3
+0223  14                 add
+0224  0C 0E              pop dx
+0226  39    05 00 00 00  call func25:
+0231  0B 60 00 00 00 00  push [ 0 ]
+0237  0B 0E              push dx
+0239  0B 20 00 00 40 40  push 3
+0245  15                 sub
+0246  0C 0E              pop dx
+0248  0C 6E 00 00 40 40  pop [ dx +  3 ]
+0254  0B 6E 00 00 00 40  push [ dx + 2 ]
+0260  0B 20 00 00 20 41  push 10
+0266  14                 add
+0267  0C 6E 00 00 00 40  pop [ dx +  2 ]
+0273  32    B6 00 00 00  jmp label2:
+0278  0B 6E 00 00 40 40  push [ dx + 3 ]
+0284  01                 out
+0285  32    1E 01 00 00  jmp endlabel:
+0290  00                 end

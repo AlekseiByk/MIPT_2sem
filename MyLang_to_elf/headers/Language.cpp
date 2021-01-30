@@ -1,3 +1,4 @@
+#include "Header.h"
 
 tree_node_t* GetTree(const char* str)
 {

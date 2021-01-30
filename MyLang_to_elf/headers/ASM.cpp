@@ -1,133 +1,14 @@
-#include <elf.h>
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <assert.h>
-
-#define WRITE_HEADER(HEADER, File)\
-    for (int i = 0; i < sizeof(HEADER); i++)\
-        fputc(((char*)&HEADER)[i], File);
-
-#define B1 __uint8_t
-#define B2 __uint16_t
-#define B4 __uint32_t
-#define B8 __uint64_t
-
-#pragma pack(1)
-
-struct ELF_Header {
-  B4 ei_MAG         = 0x464C457F;               // signature
-  B1 ei_CLASS       = ELFCLASS64;               // 64 bit format
-  B1 ei_DATA        = ELFDATA2LSB;              // little endian
-  B4 ei_VERSION     = 0x00000001; 
-  B2 ei_OSABI       = ELFOSABI_NONE;            // UNIX System V ABI
-  B4 ei_OSABIVER    = 0x00000000;
-  B2 E_TYPE         = ET_EXEC;                  // exe
-  B2 E_MACHINE      = EM_X86_64;                // x86_64
-  B4 E_VERSION      = EV_CURRENT;       
-  B8 E_ENTRY        = 0x00000000004000b0;       // entry point
-  B8 E_PHOFF        = 0x0000000000000040;       // elf header size
-  B8 E_SHOFF        = 0x0000000000000000;       // start of the section header table
-  B4 E_FLAGS        = 0x00000000;
-  B2 E_EHSIZE       = 0x0040;                   // size of this header
-  B2 E_PHENTSIZE    = 0x0038;                   // size of program header table 
-  B2 E_PHNUM        = 0x0002;                   // number of entries in the progtam header file
-  B2 E_SHENTSIZE    = 0x0040;                   // size of the section header table
-  B2 E_SHNUM        = 0x0000;
-  B2 E_SHSTRNDX     = 0x0000;
-};
-
-struct Program_Header {
-  B4 P_TYPE         = 0x00000000 | PT_LOAD;     // Segment will be loaded in memory
-  B4 P_FLAGS        = 0x00000000 | PF_R;        // Read and Execute format
-  B8 P_OFFSET       = 0x0000000000000000;       // Offset where it should be read
-  B8 P_VADDR        = 0x0000000000400000;       // Virtual address where it should be loaded
-  B8 P_PADDR        = 0x0000000000400000;       // Phsical address where it should be loaded
-  B8 P_FILESZ       = 0x00000000000000b0;       // Size on file
-  B8 P_MEMSZ        = 0x00000000000000b0;       // Size in memory
-  B8 P_ALIGN        = 0x0000000000000000;
-  B4 P_TYPE_exe     = 0x00000000 | PT_LOAD;     // Segment will be loaded in memory
-  B4 P_FLAGS_exe    = 0x00000000 | PF_R | PF_X; // Read and Execute format
-  B8 P_OFFSET_exe   = 0x00000000000000b0;       // Offset where it should be read
-  B8 P_VADDR_exe    = 0x00000000004000b0;       // Virtual address where it should be loaded
-  B8 P_PADDR_exe    = 0x00000000004000b0;       // Phsical address where it should be loaded
-  B8 P_FILESZ_exe   = 0x0000000000000000;       // Size on file
-  B8 P_MEMSZ_exe    = 0x0000000000000000;       // Size in memory
-  B8 P_ALIGN_exe    = 0x0000000000000000;
-};
-
-                                                //pointer to print function
-int print_pointer = 0;
-
-                                                //pointer to scan function
-int scan_pointer  = 0;
-
-                                                //size of executable code
-int size = 0;
-
-                                                //entery point of executable code
-int entery_point = 0;
-int entery_point_0 = 0;
-
-int Number_Of_Labels_hex = 0;
-
-//===============================================================
-
-//write exit(0)
-//input: char pointer to buffer
-
-//===============================================================
-
-void Write_exit(char* code_buf);
-
-//===============================================================
-
-// put call printf into buffer
-// input: char pointer to buffer
-
-//===============================================================
-
-void call_print(char* code_buf);
-
-//===============================================================
-
-// put call scan into buffer
-// input: char pointer to buffer
-
-//===============================================================
-
-void call_scan(char* code_buf);
-
-//===============================================================
-
-// return sqrt of the top stack element
-// input: char pointer to buffer
-
-//===============================================================
-
-void call_sqrt(char* code_buf);
-
-//===============================================================
-
-// translate tree to binary code
-// input: char pointer to buffer, pointer to head_tree_node
-
-//===============================================================
-
-void _to_bin(char* code_buf, tree_node_t* head);
-
-//===============================================================
-
-// this is for update/// now we can use only 12 registers
-// 
-
-//===============================================================
-
-void check_number_of_var();
+#include "Header.h"
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 void to_bin(tree_node_t* headnode)
 {
-     check_number_of_var();
+    // check_number_of_var();
+    
+    creat("My_elf.out", 0777);
+
     FILE* output = fopen("My_elf.out", "wb");
     assert(output);
 
@@ -211,7 +92,7 @@ void call_scan(char* code_buf)
     size += sizeof(int);
     return;
 }
-
+/*
 void check_number_of_var()
 {
     if ((VarNumberArray[takefunc("main")] + VarNumberArray[0])> 12)
@@ -220,7 +101,7 @@ void check_number_of_var()
         abort();
     }
     return;
-}
+}*/
 
 #define PUTHEX4(hex)                                                \
                         *((int*)(code_buf + size)) = hex;           \
@@ -310,6 +191,7 @@ void call_div(char* code_buf)                                       // deviding
     return;
 }
 
+
 int take_addres(const char * name)                                  //return address of name label
 {
     for (int i = 0;i < number_of_labels; i++)
@@ -337,8 +219,6 @@ void write_addres(const char * name)                                //record add
     number_of_labels++;
     return;
 }
-
-int FunctionNumber = 0;
 
 void mov_from_rax(char* code_buf, int variable)                     //mov from rax to ...
 {
@@ -372,6 +252,7 @@ void mov_from_rax(char* code_buf, int variable)                     //mov from r
                     printf("\033[01;31mError:\033[00m Something went wrong");
                     abort();
                     break;
+            }
         }
     }
 }
@@ -525,7 +406,7 @@ void _to_bin(char* code_buf, tree_node_t* node)
     // {
         
     // }
-    else if (IfFunc(node, 21))      //sqrt
+    else if (IfFunc(node, 21))                                      //sqrt
     {
         printf("sqrt\n");
         _to_bin(code_buf, node -> right);
@@ -554,31 +435,31 @@ void _to_bin(char* code_buf, tree_node_t* node)
         char label_name[8] = "";
 
         _to_bin(code_buf, node -> left -> left);
-        PUTHEX1(0x50);              //rush rax
+        PUTHEX1(0x50);                                                  //push rax
 
         _to_bin(code_buf, node -> left -> right);
-        PUTHEX1(0x59);              //pop rcx
+        PUTHEX1(0x59);                                                  //pop rcx
 
-        PUTHEX2(0xc139);            //cmp rcx, rax        
+        PUTHEX2(0xc139);                                                //cmp rcx, rax        
 
-        PUTHEX1(0x0f);
+        PUTHEX1(0x0f);                                                  //j.. no_label
         PUTHEX1((char)JumpWords[(int)node -> left -> data.value].num);
 
         
         sprintf(label_name, "label%d", LabelNumber);
-        int temp = take_addres(label_name) - size - 4;
+        int temp = take_addres(label_name) - size - 4;                  //adr of no_label
         PUTHEX4(temp);
 
-        _to_bin(code_buf, node -> right -> left);
+        _to_bin(code_buf, node -> right -> left);                       //body_of_yes_label
 
         if ((node -> right -> right) != nullptr)
         {
             PUTHEX1(0xe9);
-            sprintf(label_name, "label%d", LabelNumber + 1);
+            sprintf(label_name, "label%d", LabelNumber + 1);            //jmp to end_if
             temp = take_addres(label_name) - size - 4;
             PUTHEX4(temp);
 
-            sprintf(label_name, "label%d", LabelNumber);
+            sprintf(label_name, "label%d", LabelNumber);                
             write_addres(label_name);
 
             _to_bin(code_buf, node -> right -> right);
@@ -600,7 +481,7 @@ void _to_bin(char* code_buf, tree_node_t* node)
         Number_Of_Labels_hex += 2;
         char label_name[8] = "";
 
-                                //  --------------------------jmp comparing
+                                                                                    //  --------------------------jmp comparing
         PUTHEX1(0xe9);
         sprintf(label_name, "label%d", LabelNumber + 1);
         int temp = take_addres(label_name) - size - 4;
@@ -609,20 +490,20 @@ void _to_bin(char* code_buf, tree_node_t* node)
         sprintf(label_name, "label%d", LabelNumber);
         write_addres(label_name);
 
-        _to_bin(code_buf, node -> right);       //------------while body
+        _to_bin(code_buf, node -> right);                                           //------------while body
 
         sprintf(label_name, "label%d", LabelNumber + 1);
         write_addres(label_name);
-                                //  --------------------------comparing
+                                                                                    //  --------------------------comparing
         _to_bin(code_buf, node -> left -> left);
-        PUTHEX1(0x50);              //rush rax
+        PUTHEX1(0x50);                                                              //rush rax
 
         _to_bin(code_buf, node -> left -> right);
-        PUTHEX1(0x59);              //pop rcx
+        PUTHEX1(0x59);                                                              //pop rcx
 
-        PUTHEX2(0xc139);            //cmp rcx, rax        
+        PUTHEX2(0xc139);                                                            //cmp rcx, rax        
 
-        PUTHEX1(0x0f);              //j..
+        PUTHEX1(0x0f);                                                              //j..
         PUTHEX1((char)JumpWords2[(int)node -> left -> data.value].num);
         sprintf(label_name, "label%d", LabelNumber);
         temp = take_addres(label_name) - size - 4;
@@ -633,7 +514,7 @@ void _to_bin(char* code_buf, tree_node_t* node)
     else if (((node -> data.type) == TYPEOPERATOR) && ((node -> data.value) == SEMICOLONop) && ((node -> left -> data.value) > 24))
     {
         if (strcmp(takefunc((int)node -> left -> data.value), "main") == 0)
-            entery_point += size;
+            entery_point += size;                                                   //write main entery_point address
         else
             write_addres(takefunc((int)node -> left -> data.value));
 
@@ -642,9 +523,9 @@ void _to_bin(char* code_buf, tree_node_t* node)
         printf("SEMICOLON FUNC %d\n", FunctionNumber);
         fflush(0);
 
-        PUTHEX1(0x55);          //push rbp
-        PUTHEX4(0x246c8d48);        //mov rbp, rsp + 8
-        PUTHEX1(0x08);              
+        PUTHEX1(0x55);                                                              //push rbp
+        PUTHEX4(0x246c8d48);                                                        //mov rbp, rsp + 8
+        PUTHEX1(0x08);                     
         
         _to_bin(code_buf, node -> left -> right);
 
@@ -657,25 +538,25 @@ void _to_bin(char* code_buf, tree_node_t* node)
         if (strcmp(takefunc(FunctionNumber + 24), "main") != 0)
         {
             _to_bin(code_buf, node -> left);
-            PUTHEX1(0x5d);         //pop rbp
-            PUTHEX1(0xc3);         //ret
+            PUTHEX1(0x5d);                                                          //pop rbp
+            PUTHEX1(0xc3);                                                          //ret
         }
     }
     else if (((node -> data.type) == TYPEOPERATOR) && ((node -> data.value) == COMMAop))
     {
         //-----------------------------------
     }
-    else//      function call
+    else                                                                            //      function call
     {
         if ((node -> left) != nullptr)
             _to_bin_comma(code_buf, node -> left, VarNumberArray[(int)node -> data.value - 24], 1);
 
-        int temp = take_addres(takefunc((int)node -> data.value)) - size - 5; //calculating call addres
+        int temp = take_addres(takefunc((int)node -> data.value)) - size - 5;       //calculating call addres
         printf("0x%x, %d\n", temp, temp);
-        PUTHEX1(0xe8);  //call
+        PUTHEX1(0xe8);                                                              //call
         PUTHEX4(temp);
 
-        PUTHEX2(0x8148);    //add rsp number of vars
+        PUTHEX2(0x8148);                                                            //add rsp number of vars
         PUTHEX1(0xc4);
         PUTHEX4((VarNumberArray[(int) node -> data.value - 24])*8);
     }

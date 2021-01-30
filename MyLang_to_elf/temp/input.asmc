@@ -1,0 +1,80 @@
+jmp main:
+func25:
+push [ dx + 1 ]
+push 1
+ja label0:
+push [ dx + 1 ]
+pop [ 0 ]
+ret
+label0:
+push [ dx + 1 ]
+push 1
+sub
+pop [ dx + 2 ]
+push dx
+push 1
+add
+pop dx
+call func25:
+push [ 0 ]
+push dx
+push 1
+sub
+pop dx
+push [ dx + 1 ]
+push 2
+sub
+pop [ dx + 2 ]
+push dx
+push 1
+add
+pop dx
+call func25:
+push [ 0 ]
+push dx
+push 1
+sub
+pop dx
+add
+pop [ 0 ]
+ret
+jmp endlabel:
+main:
+push dx
+push 7
+add
+pop dx
+in
+pop[ dx + 1 ]
+push 0
+pop [ dx +  2 ]
+label2:
+push [ dx + 2 ]
+push 1000
+jae label3:
+push [ dx + 1 ]
+pop [ dx + 4 ]
+push dx
+push 3
+add
+pop dx
+call func25:
+push [ 0 ]
+push dx
+push 3
+sub
+pop dx
+pop [ dx +  3 ]
+push [ dx + 2 ]
+push 10
+add
+pop [ dx +  2 ]
+jmp label2:
+label3:
+push [ dx + 3 ]
+out
+jmp endlabel:
+
+
+endlabel:
+end

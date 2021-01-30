@@ -1,10 +1,21 @@
-#include "FuncTree.h"
-#include "functions.h"
-#include "ASSert.h"
-
+#include "Header.h"
 
 Namenum_t functionArray[MAXCOMMANDLEN] = {{"", 0}, {"+", 1}, {"-", 2}, {"*", 3}, {"/", 4}, {"^", 5}, {"cos", 6}, {"sin", 7}, {"abs", 8}, {"tg", 9}, {"ctg", 10}, {"sh", 11}, {"ch", 12}, {"th", 13}, {"cth", 14}, {"ln", 15}, {"log10", 16}, {"exp", 17}, {"acos", 18}, {"asin", 19}, {"atg", 20}, {"sqrt", 21}, {"get", 22}, {"put", 23}, {"deriv", 24}};
 int FuncNumber = 25;
+
+double Abs(double number)
+{
+	return (number > 0)? number : -number;
+}
+double ctan(double number)
+{
+	assert(tan(number) != 0);
+	return 1 / tan(number);
+}
+double ctanh(double number)
+{
+	return 1 / tanh(number);
+}
 
 int CompChoose(const char * text)
 {

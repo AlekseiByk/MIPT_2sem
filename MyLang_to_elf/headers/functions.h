@@ -17,10 +17,12 @@ struct functions_t{
 /// number of functions
 
 double Abs(double number);
+
 double ctan(double number);
+
 double ctanh(double number);
 
-functions_t functions[] = 
+const functions_t functions[] = 
 {
 	{"cos", 	&cos, 	 0, -1},
 	{"sin", 	&sin, 	 1,  0},
@@ -39,7 +41,7 @@ functions_t functions[] =
 	{"atg", 	&atan, 	14},
 	{"sqrt", 	&sqrt, 	15, -1}
 };
-
+/*
 double Abs(double number)
 {
 	return (number > 0)? number : -number;
@@ -53,5 +55,5 @@ double ctanh(double number)
 {
 	return 1 / tanh(number);
 }
-
+*/
 #endif

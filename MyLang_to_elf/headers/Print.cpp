@@ -1,3 +1,4 @@
+#include "Header.h"
 
 void GraphPrintTree(FILE *dump, tree_node_t* headNode)
 {
