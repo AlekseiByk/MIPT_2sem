@@ -1,13 +1,6 @@
 #ifndef HEADER_H
 #define HEADER_H
 
-const int MAXCOMMANDLEN = 200;
-const int FUNCTIONMAXLEN = 20;
-const int COMMANDSNUMBER = 12;
-const int MAXCODELEN = 10000;
-const int VARNUMBER = 100;
-
-
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,7 +8,9 @@ const int VARNUMBER = 100;
 #include <unistd.h>
 #include <stdarg.h>
 #include "ASSert.h"
+#include "constants.h"
 #include "functions.h"
+
 
 struct node_value_t{
     int type;
@@ -27,23 +22,12 @@ struct unit_t{
     int value;
 };
 
-struct Namenum_t{
-    char name[FUNCTIONMAXLEN];
-    int num = 0;
-};
-
 struct tree_node_t
 {
     node_value_t data;
     tree_node_t* left;
     tree_node_t* right;
     tree_node_t* parant;
-};
-
-struct system_struct{
-    char name[MAXCOMMANDLEN];
-    char color[MAXCOMMANDLEN];
-    char form[MAXCOMMANDLEN];
 };
 
 struct Namenumnum_t {
@@ -105,58 +89,8 @@ int CompChoose(const char * text);
 int functionlist(const char *func);
 char* takefunc(int num);
 
-const struct MyCommands_t{
-    char MyLang[MAXCOMMANDLEN];
-    char CLang[MAXCOMMANDLEN];
-} MyLangCommands[] = {
-                        {"прымі","get"},
-                        {"вывесці","put"},
-                        {"калі","if"},
-                        {"вярни","ret"},
-                        {"інакш","else"},
-                        {"пакуль","while"},
-                        {"меньш","<"},
-                        {"больш",">"},
-                        {"роўны","=="},
-                        {"раўно","="},
-                        {"галоўная","main"},
-                        {"вытворная","deriv"},
-                        {"корань","sqrt"}
-};
-
-enum types{
-    TYPENUMBER      = 1,
-    TYPEFUNCTION    = 2,
-    TYPEVARIABLE    = 3,
-    TYPEOPERATOR    = 4,
-    TYPECOMPARE     = 5,
-
-    OPop        = 0,
-    SEMICOLONop = 1,
-    COMMAop     = 2,
-    WHILEop     = 3,
-    IFop        = 4,
-    IFELSEop    = 5,
-    RETURNop    = 6,
-    ASSIGNop    = 7,
-};
-
-const system_struct operators[] = { { "op",         "orange", "circle"}, 
-                                    { ";",          "orange", "circle"},
-                                    { ",",          "orange", "circle"},
-                                    { "while",      "orange", "pentagon"},
-                                    { "if",         "orange", "hexagon"},
-                                    { "if-else",    "orange", "hexagon"},
-                                    { "ret",    "orange", "septagon"},
-                                    { "=",          "orange", "larrow"}
-                                };
 
 
-const Namenum_t JumpWords[] = { { "jne", 0x85}, { "je", 0x84}, { "jbe", 0x86}, { "jb", 0x82}, { "jae", 0x83}, { "ja", 0x87}};
-const Namenum_t JumpWords2[] = { { "je", 0x84}, { "jne", 0x85}, { "ja", 0x87}, { "jae", 0x83}, { "jb", 0x82}, { "jbe", 0x86}};
-
-const Namenum_t compare_operators[] = { { "==", 0}, { "!=", 0}, { ">", 0}, { ">=", 0}, { "<", 0}, { "<=", 0} };
-const int compnum = 6;
 
 extern unit_t arr[MAXCODELEN];
 extern int VarNumberArray[50];
@@ -169,10 +103,6 @@ extern const char * starts;
 //************************************************************************
 
 #include <elf.h>
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <assert.h>
 
 struct addres_label
 {

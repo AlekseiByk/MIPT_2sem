@@ -1,33 +1,17 @@
 HEADERS = headers/ASSert.h headers/Text.h headers/functions.h headers/Header.h
+OBJS = lang.o func.o ASM.o Language.o Print.o
 
-all:lang remove
+all:lang clean
 
-lang: lang.o func.o ASM.o Language.o Print.o
-	g++ $^ -o lang
+lang: $(OBJS)
+	g++ $^ -o $@
 
-func.o: $(HEADERS)
-	g++ -c headers/func.cpp -o $@
-
-
-lang.o: lang.cpp $(HEADERS)
+%.o: headers/%.cpp $(HEADERS) 
 	g++ -c $< -o $@
 
-ASM.o: $(HEADERS)
-	g++ -c headers/ASM.cpp -o $@
 
-Language.o: $(HEADERS)
-	g++ -c headers/Language.cpp -o $@
-
-Print.o: $(HEADERS)
-	g++ -c headers/Print.cpp -o $@
-
-remove:
-	rm -rf lang.o
-	rm -rf func.o
-	rm -rf ASM.o
-	rm -rf Language.o
-	rm -rf Print.o
-	
+clean:
+	rm -rf *.o
 
 toasm:
 	temp/./assembler
